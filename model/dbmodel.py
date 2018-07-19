@@ -20,6 +20,10 @@ class Customers(object):
         self.address = address
         self.source_from = source_from
 
+    def __repr__(self):
+        return "<Customer(name='%s', phone='%s', address='%s', " \
+               "source_from='%s')" % (self.name, self.phone, self.address,
+                                      self.source_from)
 
 mapper(Customers, customers)
 
@@ -46,5 +50,9 @@ class Transaction(object):
         self.quantity = quantity
         self.amount = amount
 
-
+    def __repr__(self):
+        return "<Transaction(name='%s', date='%s', product='%s'," \
+               "quantity='%s', amount='%s')>" % (self.name, self.date,
+                                                 self.product, self.quantity,
+                                                 self.amount)
 mapper(Transaction, transaction)

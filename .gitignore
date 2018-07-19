@@ -1,2 +1,5 @@
 #JetBrains Rider
 .idea/
+
+#user & psswd of the database
+.json
