@@ -1,0 +1,6 @@
+{
+  "database":{
+      "ConnectionString": "mysql+pymysql://root:root@localhost/fruitdb"
+  }
+
+}
