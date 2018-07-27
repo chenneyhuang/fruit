@@ -2,7 +2,8 @@ import asyncio
 import logging
 import aiomysql
 from sqlalchemy import create_engine
-
+import json
+import pandas as pd
 
 
 # @asyncio.coroutine
@@ -37,3 +38,14 @@ from sqlalchemy import create_engine
 #         yield from cur.close()
 #         logging.info('rows returned: %s' % len(rs))
 #         return rs
+
+
+def get_from_db(query, conn, params=None):
+    df = pd.read_sql(query, conn, params=params)
+    df.fillna('', inplace=True)
+    return df
+
+
+def read_excel(file_fullpath):
+
+    return pd.read_sql(file_fullpath)

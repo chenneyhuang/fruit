@@ -1,11 +1,22 @@
 import simplejson as json
 from flask import Blueprint, request
+from sqlalchemy import create_engine
+import config
+from sqlalchemy.orm import sessionmaker
 from util.template import ReponseTemplate
+from model.dbmodel import transaction
+import util.mysql_util as ut
 
 mold = Blueprint('selling_info', __name__)
 
-@mold.route('/', methods=['GET'])
-@mold.route('/index', methods=['GET'])
-def show_selling_info():
-    pass
+conn = config.conn_str
 
+
+@mold.route('/', methods=['GET'])
+@mold.route('/by_product', methods=['GET'])
+def by_product(product):
+    engine = create_engine(conn)
+    Session_class = sessionmaker(bind=engine)
+    Session = Session_class()
+    selling_detail = Session.query(transaction.Transaction).filter_by(product='{}'.format(product)).all
+    return ReponseTemplate.jsonify_ok_obj_response(selling_detail)

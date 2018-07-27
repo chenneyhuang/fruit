@@ -1,6 +1,8 @@
 {
-  "database":{
-      "ConnectionString": "mysql+pymysql://root:root@localhost/fruitdb"
+  "prod": {
+    "database":{
+      "ConnectionString": "mysql+pymysql://root:root@localhost/fruitdb?charset=utf8"
+    }
   }
 
 }

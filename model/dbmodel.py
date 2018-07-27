@@ -1,4 +1,4 @@
-from sqlalchemy import Table, MetaData, Column, Integer, String, DATE, DECIMAL,ForeignKey
+from sqlalchemy import Table, MetaData, Column, Integer, String, DATE, DECIMAL,ForeignKey, DateTime
 from sqlalchemy.orm import mapper
 
 metadata = MetaData()
@@ -25,6 +25,7 @@ class Customers(object):
                "source_from='%s')" % (self.name, self.phone, self.address,
                                       self.source_from)
 
+
 mapper(Customers, customers)
 
 # 类关联起来
@@ -35,7 +36,7 @@ mapper(Customers, customers)
 transaction = Table('transaction', metadata,
                     Column('id', Integer, primary_key=True),
                     Column('name', String(20)),
-                    Column('date', DATE),
+                    Column('date', DateTime),
                     Column('product', String(20)),
                     Column('quantity', Integer),
                     Column('amount',DECIMAL(2))
@@ -55,4 +56,7 @@ class Transaction(object):
                "quantity='%s', amount='%s')>" % (self.name, self.date,
                                                  self.product, self.quantity,
                                                  self.amount)
+
+
 mapper(Transaction, transaction)
+
