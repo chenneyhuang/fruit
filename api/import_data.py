@@ -49,18 +49,19 @@ def import_customer():
     return ReponseTemplate.jsonify_ok_obj_response(customer_obj)
 
 
-@mold.route('/transactions', methods=['POST'])
-def import_transactions():
+@mold.route('/transactions/', methods=['POST'])
+def import_transactions(file_name):
     engine = create_engine(conn)
     #df = pd.read_excel(request.data)
-    tran = json.loads(request.data)
+    #tran = json.loads(request.data)
+    tran = pd.read_excel(file_name)
     if tran is None:
         logging.info("Not able to get the data from request.")
-    name = tran.get('name', '')
-    date = tran.get('date', '')
-    product = tran.get('product', '')
-    quantity = tran.get('quantity', '')
-    amount = tran.get('amount', '')
+    name = tran.get('客户姓名', '')
+    date = tran.get('交易日期', '')
+    product = tran.get('产品名称', '')
+    quantity = tran.get('成交量', '')
+    amount = tran.get('成交金额', '')
 
     # 创建与数据库的会话session class ,注意,这里返回给session的是个class,不是实例
     Session_class = sessionmaker(bind=engine)  # 实例和engine绑定

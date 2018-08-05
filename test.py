@@ -2,6 +2,7 @@ import json
 import os
 import os
 import json
+import pandas as pd
 
 
 def set_env_by_setting(name):
@@ -14,12 +15,15 @@ def set_env_by_setting(name):
             os.environ[key] = value
             print(os.environ.get('ConnectionString'))
 
+def test_uploaded_file(file):
+    df = pd.read_excel(file)
+    return df.info()
 
 if __name__ == '__main__':
     # set_env_by_setting('prod')
     # conn_str = os.environ.get('ConnectionString')
     # print(conn_str)
-    pass
+    test_uploaded_file("-1.xlsx")
 
 
 
