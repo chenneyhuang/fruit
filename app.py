@@ -18,7 +18,7 @@ app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 60 * 1024 * 1024
 
 app.register_blueprint(import_data.mold, url_prefix='/api/import')
-app.register_blueprint(general_search.mold, url_prefix='/api/show/<table>/<category>/<value>')
+app.register_blueprint(general_search.mold, url_prefix='/api/show')
 app.register_blueprint(statistic.mold, url_prefix='/api/check')
 
 
@@ -49,14 +49,14 @@ def default_exception_handler(error):
     return ReponseTemplate().jsonify_bad_response(str(error), code)
 
 
-def set_env_by_setting(name):
-    with open("./setting.json") as f:
-        json_obj = json.load(f)
-        # db = json_obj[name]['database']
-        for key,value in json_obj[name]['database'].items():
-            os.environ[key] = value
+# def set_env_by_setting(name):
+#     with open("./setting.json") as f:
+#         json_obj = json.load(f)
+#         # db = json_obj[name]['database']
+#         for key,value in json_obj[name]['database'].items():
+#             os.environ[key] = value
 
 
 if __name__ == '__main__':
-    set_env_by_setting('prod')
+    # set_env_by_setting('prod')
     app.run(debug=True)

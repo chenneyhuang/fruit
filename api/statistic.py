@@ -1,10 +1,12 @@
+# -*- coding:utf-8 -*-
+
 import simplejson as json
 from flask import Blueprint, request
 from sqlalchemy import create_engine
 import config
 from sqlalchemy.orm import sessionmaker
 from util.template import ReponseTemplate
-from model.dbmodel import transaction
+from model.dbmodel import Transaction
 import util.mysql_util as ut
 
 mold = Blueprint('selling_info', __name__)
@@ -18,5 +20,5 @@ def by_product(product):
     engine = create_engine(conn)
     Session_class = sessionmaker(bind=engine)
     Session = Session_class()
-    selling_detail = Session.query(transaction.Transaction).filter_by(product='{}'.format(product)).all
+    selling_detail = Session.query(Transaction.Transaction).filter_by(product='{}'.format(product)).all
     return ReponseTemplate.jsonify_ok_obj_response(selling_detail)
