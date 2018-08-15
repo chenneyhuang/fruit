@@ -4,7 +4,7 @@ from flask import Flask, request
 import logging; logging.basicConfig(level=logging.INFO)
 import asyncio, os, json, time
 from datetime import datetime
-from util.template import ReponseTemplate
+from util.template import ResponseTemplate
 from aiohttp import web
 from api import import_data, statistic, general_search
 import sys
@@ -23,6 +23,7 @@ app.register_blueprint(statistic.mold, url_prefix='/api/check')
 
 
 def allowed_file(filename):
+    #filename = filename.encode("utf8")
     return '.' in filename and \
         filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
@@ -35,7 +36,7 @@ def upload_excel():
         f.save(secure_filename(filename))
         # file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         df = pd.read_excel(f)
-        return ReponseTemplate().jsonify_ok_df_response(df)
+    return ResponseTemplate().jsonify_ok_df_response(df)
 
 
 @app.errorhandler(Exception)
@@ -46,7 +47,7 @@ def default_exception_handler(error):
     code = 401 if 'auth' in str(type(error)).lower() else 400
     print('[Error]:{}'.format(trace))
 
-    return ReponseTemplate().jsonify_bad_response(str(error), code)
+    return ResponseTemplate().jsonify_bad_response(str(error), code)
 
 
 # def set_env_by_setting(name):

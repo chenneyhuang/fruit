@@ -61,11 +61,7 @@ class Transaction(Base):
     #     self.quantity = quantity
     #     self.amount = amount
     #
-    # def __repr__(self):
-    #     return "<Transaction(name='%s', date='%s', product='%s'," \
-    #            "quantity='%s', amount='%s')>" % (self.name, self.date,
-    #                                              self.product, self.quantity,
-    #                                              self.amount)
+
     __tablename__ = 'transaction'
     id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
     name = Column(String(20))
@@ -73,6 +69,12 @@ class Transaction(Base):
     product = Column(String(20))
     quantity = Column(Integer)
     amount = Column(Integer)
+
+    def __repr__(self):
+        return "<Transaction(name='%s', date='%s', product='%s'," \
+               "quantity='%s', amount='%s')>" % (self.name, self.date,
+                                                 self.product, self.quantity,
+                                                 self.amount)
 
 # mapper(Transaction, transaction)
 

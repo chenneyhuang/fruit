@@ -4,7 +4,7 @@ import simplejson as json
 from flask import jsonify
 
 
-class ReponseTemplate():
+class ResponseTemplate():
     response_template = {
         "success": "Success",
         "data": [],

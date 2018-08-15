@@ -5,7 +5,7 @@ from flask import Blueprint, request
 from sqlalchemy import create_engine
 import config
 from sqlalchemy.orm import sessionmaker
-from util.template import ReponseTemplate
+from util.template import ResponseTemplate
 from model.dbmodel import Transaction
 import util.mysql_util as ut
 
@@ -21,4 +21,4 @@ def by_product(product):
     Session_class = sessionmaker(bind=engine)
     Session = Session_class()
     selling_detail = Session.query(Transaction.Transaction).filter_by(product='{}'.format(product)).all
-    return ReponseTemplate.jsonify_ok_obj_response(selling_detail)
+    return ResponseTemplate.jsonify_ok_obj_response(selling_detail)

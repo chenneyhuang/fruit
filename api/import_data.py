@@ -2,7 +2,7 @@
 
 import json
 from flask import Blueprint, request
-from util.template import ReponseTemplate
+from util.template import ResponseTemplate
 import logging
 from model.dbmodel import Customers, Transaction
 from sqlalchemy.orm import mapper, sessionmaker
@@ -10,7 +10,9 @@ from sqlalchemy import create_engine
 import config
 import pandas as pd
 from sqlalchemy.ext.declarative import declarative_base
-
+import xlrd
+import time
+import datetime
 
 mold = Blueprint('import', __name__)
 
@@ -45,14 +47,13 @@ def import_customer():
     print(customer_obj.id, customer_obj.name,
           customer_obj.phone, customer_obj.address,
           customer_obj.source_from)
-
     session.add(customer_obj)  # put the data obj into session, will insert together
     # check again. but still nothing yet....
     print(customer_obj.id, customer_obj.name,
           customer_obj.phone, customer_obj.address,
           customer_obj.source_from)
     session.commit()  # insert the data into database
-    return ReponseTemplate.jsonify_ok_obj_response(customer_obj)
+    return ResponseTemplate().jsonify_ok_obj_response(customer_obj)
 
 
 @mold.route('/transactions/<file_name>', methods=['POST'])
@@ -61,35 +62,54 @@ def import_transactions(file_name):
 
     #df = pd.read_excel(request.data)
     #tran = json.loads(request.data)
-    tran = pd.read_excel(file_name)
-    if tran is None:
-        logging.info("Not able to get the data from request.")
-    name = tran.get('客户姓名', '')
-    # print(name)
-    date = tran.get('交易日期', '')
-    # print(date)
-    product = tran.get('产品名称', '')
-    # print(product)
-    quantity = tran.get('成交量', '')
-    amount = tran.get('成交金额', '')
+    #tran = pd.read_excel(file_name)
+    book = xlrd.open_workbook(file_name)
+    # tran = book.sheet_by_index(0)
+    tran = book.sheet_by_name("Sheet1")
 
     Base.metadata.create_all(engine)
     # 创建与数据库的会话session class ,注意,这里返回给session的是个class,不是实例
     Session_class = sessionmaker(bind=engine)  # 实例和engine绑定
     session = Session_class()  # 生成session实例，相当于游标
-    # generate the object for the data we would like to insert
+    #
+    rowList= tran.row_values(1)
 
-    transaction_obj = Transaction(name=name, date=date, product=product,
-                                  quantity=quantity, amount=amount)
-    # print to check, there should be nothing yet
-    print(transaction_obj.name, transaction_obj.product, transaction_obj.date,
-          transaction_obj.quantity, transaction_obj.amount)
-    session.add(transaction_obj)  # put the data into obj
-    # check again, three should be nothing still
+    for r in range(1, tran.nrows):
+
+    # if tran is None:
+    #     logging.info("Not able to get the data from file.")
+    # name = tran.get('客户姓名', '')
+    # # print(name)
+    # date = tran.get('交易日期', '')
+    # # print(date)
+    # product = tran.get('产品名称', '')
+    # # print(product)
+    # quantity = tran.get('成交量', '')
+    # amount = tran.get('成交金额', '')
+        name = tran.cell(r,0).value
+        date = datetime.datetime(*time.strptime("Dec 30 1899", "%b %d %Y")[:6]) + \
+        datetime.timedelta(days=int(rowList[1]))
+        #print(type(date))
+        product = tran.cell(r,2).value
+        quantity = tran.cell(r,3).value
+        amount = tran.cell(r,4).value
+
+        # generate the object for the data we would like to insert
+
+        transaction_obj = Transaction(name=name, date=date, product=product,
+                                      quantity=quantity, amount=amount)
+        # print(type(transaction_obj.name))
+
+        # s = json.dumps(transaction_obj)
+        # print to check, there should be nothing yet
+        print(transaction_obj.name, transaction_obj.product, transaction_obj.date,
+              transaction_obj.quantity, transaction_obj.amount)
+        session.add(transaction_obj)  # put the data into obj
+    # check again, there should be nothing still
     print(transaction_obj.name, transaction_obj.product, transaction_obj.date,
           transaction_obj.quantity, transaction_obj.amount)
     session.commit()  # insert
-    return ReponseTemplate.jsonify_ok_obj_response(transaction_obj)
+    return ResponseTemplate().jsonify_ok_str_response(None)
 
 
 # @mold.route('/test', methods=['POST'])
