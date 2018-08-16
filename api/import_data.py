@@ -74,6 +74,9 @@ def import_transactions(file_name):
     #
     rowList= tran.row_values(1)
 
+    columns = ['name', 'date', 'product', 'quantity', 'amount']
+    index = []
+    df = pd.DataFrame(index=index, columns=columns)
     for r in range(1, tran.nrows):
 
     # if tran is None:
@@ -98,6 +101,10 @@ def import_transactions(file_name):
 
         transaction_obj = Transaction(name=name, date=date, product=product,
                                       quantity=quantity, amount=amount)
+
+        df1 = pd.DataFrame([[name, date, product, quantity, amount]], columns=columns)
+
+        df = df.append(df1)
         # print(type(transaction_obj.name))
 
         # s = json.dumps(transaction_obj)
@@ -109,7 +116,7 @@ def import_transactions(file_name):
     print(transaction_obj.name, transaction_obj.product, transaction_obj.date,
           transaction_obj.quantity, transaction_obj.amount)
     session.commit()  # insert
-    return ResponseTemplate().jsonify_ok_str_response(None)
+    return ResponseTemplate().jsonify_ok_df_response(df)
 
 
 # @mold.route('/test', methods=['POST'])
